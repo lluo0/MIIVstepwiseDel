@@ -90,4 +90,65 @@ for (p in 1:30){
   set.seed(123.4+p)
   sim10[[p]] <- simulateData(sm10, sample.nobs = 1000)
 }
+#m11: 3 factor
+sm11 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4
+f2 =~ 1*x5 + .8*x6+ .7*x7 + .7*x8
+f3 =~ 1*x9 + .8*x10 + .7*x11 + .x7*x12
+f1 ~~ .4*f2
+f1 ~~ .4*f3
+f2 ~~ .4*f3'
+sim11<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim11[[p]] <- simulateData(sm11, sample.nobs = 1000)
+}
+#sm12: 2 factor but only 2 variables on the 2nd factor
+sm12 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4 + .6*x5 + .6*x6
+        f2=~ 1*x7 + .7*x8
+      f1 ~~ .5*f2'
+sim12<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim12[[p]] <- simulateData(sm12, sample.nobs = 1000)
+}
+#sm13: 2 factor but only 2 variables on the 2nd factor and correlated error (different factor)
+sm13 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4 + .6*x5 + .6*x6
+        f2=~ 1*x7 + .7*x8
+      f1 ~~ .5*f2
+      x8 ~~ .4*x2'
+sim13<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim13[[p]] <- simulateData(sm13, sample.nobs = 1000)
+}
+
+#sm14: 2 factor but only 2 variables on the 2nd factor and correlated error (same factor)
+sm14 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4 + .6*x5 + .6*x6
+        f2=~ 1*x7 + .7*x8
+      f1 ~~ .5*f2
+      x3 ~~ .4*x2'
+sim14<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim14[[p]] <- simulateData(sm14, sample.nobs = 1000)
+}
+
+#sm15: 2 factor but only 2 variables with crossloading x2 on f2
+sm15 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4 + .6*x5 + .6*x6
+        f2=~ 1*x7 + .7*x8 + .5*x2
+      f1 ~~ .5*f2'
+sim15<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim15[[p]] <- simulateData(sm15, sample.nobs = 1000)
+}
+#sm15: 2 factor but only 2 variables with crossloading x8 on f1
+sm16 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4 + .6*x5 + .6*x6 + .5*x8
+        f2=~ 1*x7 + .7*x8
+      f1 ~~ .5*f2'
+sim16<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim16[[p]] <- simulateData(sm16, sample.nobs = 1000)
+}
 
