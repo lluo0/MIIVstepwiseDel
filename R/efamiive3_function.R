@@ -30,6 +30,7 @@ badVs <- function(fit){
     }
   v_list_final <- unique(c(v_list, v_list2))
   return(v_list_final)
+  #return(v_list)
 }
 EFAmiive3 <- function(object){
   #step 1

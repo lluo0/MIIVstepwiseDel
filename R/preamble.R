@@ -2,10 +2,10 @@ library(lavaan)
 library(MIIVsem)
 
 ##function that finds the variables with significant sargan
-sigSargan <- function(fit){
+sigSargan <- function(fit, threshold = .05){
   v_list <- vector()
   for (p in 1:length(fit$eqn))
-    if (fit$eqn[[p]]$sargan.p < .05){
+    if (fit$eqn[[p]]$sargan.p < threshold){
       v_list <- append(v_list,fit$eqn[[p]]$DVobs)
     }
   return(v_list)
@@ -66,6 +66,17 @@ getgoodmiivs <- function(probVs, miivs_all){
     names(goodmiivs)[p] <- probVs[p]
   }
   return(goodmiivs)
+}
+
+getbadmiivs <- function(single_probVs, fit){
+  miivs_all_nosign <- getMIIVs_noplussign(fit)
+  badmiivs <- list()
+  single_probV_miivs <- miivs_all_nosign[which(names(miivs_all_nosign)==single_probVs)][[1]]
+  for (p in 1:length(single_probV_miivs)){
+    badmiivs[[p]] <- single_probV_miivs[-p]
+    names(badmiivs)[p] <- single_probV_miivs[p]
+  }
+  return(badmiivs)
 }
 
 

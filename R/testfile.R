@@ -238,3 +238,151 @@ sim4smolall <- lapply(sim4smol, function(i) MIIVdel_new(model1, i, .05))
 sim4all <- lapply(sim4, function(i) MIIVdel_new(model1, i, .05))
 
 EFAmiive3(sim2smol[[1]])
+
+###8.25######
+sim1_50all<- lapply(sim1_50, function(i) MIIVdel_new(model1, i, .05))
+sim1_100all<- lapply(sim1_100, function(i) MIIVdel_new(model1, i, .05))
+sim1all <- lapply(sim1, function(i) MIIVdel_new(model1, i, .05))
+sim2_50all<- lapply(sim2_50, function(i) MIIVdel_new(model1, i, .05))
+sim2_100all<- lapply(sim2_100, function(i) MIIVdel_new(model1, i, .05))
+sim2all <- lapply(sim2, function(i) MIIVdel_new(model1, i, .05))
+sim3_50all<- lapply(sim3_50, function(i) MIIVdel_new(model1, i, .05))
+sim3_100all<- lapply(sim3_100, function(i) MIIVdel_new(model1, i, .05))
+sim3all <- lapply(sim3, function(i) MIIVdel_new(model1, i, .05))
+sim4_50all<- lapply(sim4_50, function(i) MIIVdel_new(model1, i, .05))
+sim4_100all<- lapply(sim4_100, function(i) MIIVdel_new(model1, i, .05))
+sim4all <- lapply(sim4, function(i) MIIVdel_new(model1, i, .05))
+
+sapply(sim1_50all, function(i) "x5" %in% i$"x4")
+
+sim1_50all.1<- lapply(sim1_50, function(i) MIIVdel_new(model1, i, .1))
+sim1_100all.1<- lapply(sim1_100, function(i) MIIVdel_new(model1, i, .1))
+sim2_50all.1<- lapply(sim2_50, function(i) MIIVdel_new(model1, i, .1))
+sim2_100all.1<- lapply(sim2_100, function(i) MIIVdel_new(model1, i, .1))
+#sim3_50all.1<- lapply(sim3_50, function(i) MIIVdel_new(model1, i, .1))
+#sim3_100all.1<- lapply(sim3_100, function(i) MIIVdel_new(model1, i, .1))
+
+
+miive(model1, sim2[[1]], var.cov = T, miiv.check = F,
+      instruments = '
+      x2 ~ x3+x4+x5+x6+x7+x8
+      x3 ~ x2+x4+x5+x6+x7+x8
+      x4 ~ x2+x3+x5+x6+x7+x8
+      x5 ~ x6+x7+x8
+      x6 ~ x2+x3+x4
+      x7 ~ x5+x6+x8
+      x8 ~ x2+x3+x4')
+
+sm2_nocorr <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4
+        f2=~ 1*x5 + .7*x6 + .6*x7 + .6*x8
+      f1 ~~ 0*f2'
+sim2_nocorr <- list()
+for (p in 1:30){
+   set.seed(123.4+p)
+   sim2_nocorr[[p]] <- simulateData(sm2_nocorr, sample.nobs = 1000)
+}
+miive(model1, sim2_nocorr[[1]], var.cov = T, miiv.check = F,
+      instruments = '
+      x2 ~ x3+x4+x5+x6+x7+x8
+      x3 ~ x2+x4+x5+x6+x7+x8
+      x4 ~ x2+x3+x5+x6+x7+x8
+      x5 ~ x6+x7+x8
+      x6 ~ x2+x3+x4
+      x7 ~ x5+x6+x8
+      x8 ~ x2+x3+x4')
+MIIVdel_new(model1, sim2_nocorr[[1]], .05)
+
+##
+sim_pair_syntax <- 'f1=~1*x1+.8*x2+.7*x3+.7*x4+.65*x5+.65*x6
+                     x5 ~~ .4*x6'
+sim_pair <- list()
+for (p in 1:30){
+   set.seed(123.4+p)
+   sim_pair[[p]] <- simulateData(sim_pair_syntax, sample.nobs = 1000)
+}
+
+sim_twoF_syntax <- 'f1=~1*x1+.8*x2+.7*x3+.7*x4
+                     f2=~ 1*x5+.7*x6'
+sim_twoF <- list()
+for (p in 1:30){
+   set.seed(123.4+p)
+   sim_twoF[[p]] <- simulateData(sim_twoF_syntax, sample.nobs = 1000)
+}
+
+modelA <- 'f1=~x1+x2+x3+x4+x5+x6'
+
+MIIVdel_new(modelA, sim_pair[[1]], .05)
+MIIVdel_new(modelA, sim_twoF[[1]], .05)
+#3
+sim_pair_syntax <- 'f1=~1*x1+.8*x2+.7*x3+.7*x4+.65*x5+.65*x6+.65*x7
+x5 ~~ .4*x6'
+sim_pair <- list()
+for (p in 1:30){
+   set.seed(123.4+p)
+   sim_pair[[p]] <- simulateData(sim_pair_syntax, sample.nobs = 1000)
+}
+
+miive('f1=~x1+x2+x3+x4
+      f2=~x5+x6', sim_pair[[1]], var.cov = T)
+miive('f1=~ x1+x2+x3+x4+x5+x6
+      x5~~x6', sim_twoF[[1]], var.cov = T)
+
+miive('f1=~x1+x3+x5+x6+x7+x8
+      f2=~x4+x2+x5', sim4[[1]], var.cov = T)
+
+miive('f1=~ x1+x2+x3+x4+x5+x6
+      x5~~x6', sim_pair[[1]], var.cov = T)
+
+standardizedSolution(sem('f1=~x1+x2+x3+x4
+      f2=~x5+x6', sim_pair[[1]]))
+sem('f1=~x1+x2+x3+x4
+      f2=~x5+x6', sim_pair[[1]])
+sem('f1=~x1+x2+x3+x4+x5+x6
+    x5~~x6', sim_pair[[1]])
+
+standardizedSolution(sem('f1=~x1+x2+x3+x4
+      f2=~x5+x6', sim_twoF[[1]]))
+
+sim_twoF_syntax <- 'f1=~1*x1+.8*x2+.7*x3+.7*x4
+                     f2=~ 1*x5+.7*x6+.7*x7
+f1 ~~ .4*f2'
+sim_twoF <- list()
+for (p in 1:30){
+   set.seed(123.4+p)
+   sim_twoF[[p]] <- simulateData(sim_twoF_syntax, sample.nobs = 1000)
+}
+
+miive(model2, sim2_nocorr[[1]], var.cov = T)
+MIIVdel_new(modelA, sim_twoF[[1]], threshold = .05)
+
+miive('f1=~x1+x2+x3+x4+x5+x6+x7', sim_pair[[1]], var.cov = T)
+miive('f1=~x1+x2+x3+x4+x5+x6+x7', sim_twoF[[1]], var.cov = T)
+
+MIIVdel_new('f1=~x1+x2+x3+x4+x5+x6+x7', sim_pair[[1]], .05)
+MIIVdel_new('f1=~x1+x2+x3+x4+x5+x6+x7', sim_twoF[[1]], .05)
+
+#small simulation on lavaan
+lapply(sim1_50, function(i) lavaan::cfa(model1, i))
+fit_lavaan <- sem(model1,sim1_50[[1]])
+
+modificationindices(fit_lavaan)[order(modificationindices(fit_lavaan)$"mi", decreasing = T),]
+
+sim1_50_lavaan <- lapply(sim1_50, function(i) sem(model1, i))
+sim1_100_lavaan <- lapply(sim1_100, function(i) sem(model1, i))
+
+sim1_50_MI <- lapply(sim1_50_lavaan, function(i)
+   modificationindices(i)[order(modificationindices(i)$'mi', decreasing = T),])
+sim1_100_MI <- lapply(sim1_100_lavaan, function(i)
+   modificationindices(i)[order(modificationindices(i)$'mi', decreasing = T),])
+
+sim2_50_lavaan <- lapply(sim2_50, function(i) sem(model1, i))
+sim2_100_lavaan <- lapply(sim2_100, function(i) sem(model1, i))
+sim2_50_MI <- lapply(sim2_50_lavaan, function(i)
+   modificationindices(i)[order(modificationindices(i)$'mi', decreasing = T),])
+sim2_100_MI <- lapply(sim2_100_lavaan, function(i)
+   modificationindices(i)[order(modificationindices(i)$'mi', decreasing = T),])
+
+sim2_50_MI[[1]][1:5,]
+sim2_50_MI[[2]][1:5,]
+sim2_100_MI[[1]][1:5,]
+sim2_100_MI[[2]][1:5,]

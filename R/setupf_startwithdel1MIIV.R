@@ -1,9 +1,9 @@
-ProbMiivs <- function(model, data){
+ProbMiivs <- function(model, data, threshold = .05){
   ##first run the specified model and get variables that have significant sargan
   fit_int <- miive(model = model, data = data, var.cov = T)
   sargantable_int <- getSarganTable(fit_int)
   #probVs <- sigSargan(fit_int)
-  sig_sargantable_int <- sargantable_int[which(sargantable_int[2,]<.05)]
+  sig_sargantable_int <- sargantable_int[which(sargantable_int[2,] < threshold)]
   probVs <- colnames(sig_sargantable_int)
 
   ##get MIIVs for each variables
@@ -62,7 +62,8 @@ ProbMiivs <- function(model, data){
   tentobj <- list(probVs = probVs,
                   badmiivs = badmiivs,
                   goodmiivs = goodmiivs,
-                  sig_sargantable_int = sig_sargantable_int)
+                  sig_sargantable_int = sig_sargantable_int,
+                  threshold = threshold)
   return(tentobj)
 }
 

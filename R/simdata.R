@@ -152,3 +152,61 @@ for (p in 1:30){
   sim16[[p]] <- simulateData(sm16, sample.nobs = 1000)
 }
 
+
+
+########small sample size sim#######
+#m1: one factor with x4 ~~ x5
+sm1 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4 + .65*x5 + .6*x6 + .6*x7 + .55*x8
+          x4 ~~ .5*x5'
+sim1_50 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim1_50[[p]] <- simulateData(sm1, sample.nobs = 50)
+}
+sim1_100 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim1_100[[p]] <- simulateData(sm1, sample.nobs = 100)
+}
+#m2: 2 factor model
+sm2 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4
+        f2=~ 1*x5 + .7*x6 + .6*x7 + .6*x8
+      f1 ~~ .5*f2'
+sim2_50 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim2_50[[p]] <- simulateData(sm2, sample.nobs = 50)
+}
+sim2_100 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim2_100[[p]] <- simulateData(sm2, sample.nobs = 100)
+}
+#m3: 2 factor model w/ x7 crossload on f1
+sm3 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4 + .5*x7
+        f2=~ 1*x5 + .7*x6 + .6*x7 + .6*x8
+        f1 ~~ .5*f2'
+sim3_50 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim3_50[[p]] <- simulateData(sm3, sample.nobs = 50)
+}
+sim3_100 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim3_100[[p]] <- simulateData(sm3, sample.nobs = 100)
+}
+#m4: 1 factor w/ x4 ~~ x5, and x4 ~~ x2
+sm4 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4 + .65*x5 + .6*x6 + .6*x7 + .55*x8
+          x4 ~~ .5*x5
+          x4 ~~ .4*x2'
+sim4_50 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim4_50[[p]] <- simulateData(sm4, sample.nobs = 50)
+}
+sim4_100 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim4_100[[p]] <- simulateData(sm4, sample.nobs = 100)
+}
