@@ -142,7 +142,7 @@ for (p in 1:30){
   set.seed(123.4+p)
   sim15[[p]] <- simulateData(sm15, sample.nobs = 1000)
 }
-#sm15: 2 factor but only 2 variables with crossloading x8 on f1
+#sm16: 2 factor but only 2 variables with crossloading x8 on f1
 sm16 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4 + .6*x5 + .6*x6 + .5*x8
         f2=~ 1*x7 + .7*x8
       f1 ~~ .5*f2'
@@ -152,7 +152,18 @@ for (p in 1:30){
   sim16[[p]] <- simulateData(sm16, sample.nobs = 1000)
 }
 
-
+#sm17: 3 factor with crossloading, x7 and x4 crossload
+sm17 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4 +.5*x7
+f2 =~ 1*x5 + .8*x6+ .7*x7 + .7*x8
+f3 =~ 1*x9 + .8*x10 + .7*x11 + .x7*x12+.6*x4
+f1 ~~ .4*f2
+f1 ~~ .4*f3
+f2 ~~ .4*f3'
+sim17<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim17[[p]] <- simulateData(sm17, sample.nobs = 1000)
+}
 
 ########small sample size sim#######
 #m1: one factor with x4 ~~ x5
