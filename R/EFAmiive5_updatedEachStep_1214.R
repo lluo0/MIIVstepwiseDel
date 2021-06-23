@@ -121,6 +121,14 @@ stepN_E5 <- function(stepPrev, data, threshold, priority){
   ##then see if any variables actually crossload
   ##update the bad variable list
   newbadvar <- getbadvar_crossload(crossloadfit, threshold, stepPrev$num_factor, stepPrev$badvar)
+
+
+  # #check if crossloads doesn't work at all
+  # crossloadcheck <- mapply(function(x) all(x == stepPrev$badvar), newbadvar, SIMPLIFY = T)
+  # crossloadcheck_TF <- all(crossloadcheck == T)
+  # #if crossloadcheck_TF == T, means
+
+
   ##add the crossloaded variables to the model
   # newgoodvar_addon <- lapply(newbadvar, function(x) setdiff(x, stepPrev$badvar))
   newgoodvar_addon <- list()
@@ -157,6 +165,7 @@ stepN_E5 <- function(stepPrev, data, threshold, priority){
   #check if need a new factor
   newbadvar <- setdiff(stepPrev$badvar, unique(unlist(newgoodvar_addon)))
 
+
   if(length(unique(unlist(newbadvar)))== 0){
     if(length(setdiff(newgoodvar[[stepPrev$num_factor]],stepPrev$goodvar[[stepPrev$num_factor]])) == 0){
       model <- paste0(crossloadmodel, collapse = '\n')
@@ -178,19 +187,27 @@ stepN_E5 <- function(stepPrev, data, threshold, priority){
                      nextstep = 'no')
   }
   if(length(unique(unlist(newbadvar)))== 1){
-    model <- paste0(crossloadmodel, collapse = '\n')
-    fit <- miive(model, data, var.cov = T)
-    badvar <- getbadvar(fit, threshold)
-    num_badvar <- length(badvar)
+    if(all(unlist(newgoodmodelpart) == unlist(stepPrev$goodmodelpart))){ #then we keep everything from the last step
+      finalobj <- stepPrev
+      finalobj$nextstep <- 'no' #need to stop the function from running
+    }else{
+      #we keep the single problematic variable on the latest created factor.
+      newgoodmodelpart[[length(newgoodmodelpart)]] <- paste0(newgoodmodelpart[[length(newgoodmodelpart)]], '+', newbadvar)
+      model <- paste0(newgoodmodelpart, collapse = '\n')
+      fit <- miive(model, data, var.cov = T)
+      badvar <- getbadvar(fit, threshold)
+      num_badvar <- length(badvar)
 
-    finalobj <- list(model = model,
-                     fit  = fit,
-                     num_factor = stepPrev$num_factor, #NOTE: same number of factors as the previous step
-                     num_badvar = num_badvar,
-                     #goodvar = newgoodvar,
-                     badvar = badvar,
-                     #goodmodelpart = newgoodmodelpart,
-                     nextstep = 'no')
+      finalobj <- list(model = model,
+                       fit  = fit,
+                       num_factor = stepPrev$num_factor, #NOTE: same number of factors as the previous step
+                       num_badvar = num_badvar,
+                       #goodvar = newgoodvar,
+                       badvar = badvar,
+                       #goodmodelpart = newgoodmodelpart,
+                       nextstep = 'no')
+    }
+
   }
 
   if(length(unique(unlist(newbadvar))) >1){

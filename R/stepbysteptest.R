@@ -189,10 +189,11 @@ data <- lavaan::HolzingerSwineford1939[,7:15]
 threshold <- .05
 priority <- 'sargan+factorloading_R2'
 
-s1 <- step1_E5(data, threshold, priority= 'order')
-s2 <- step2_E5(s1, data, threshold, priority='order')
+s1 <- step1_E5(data, threshold, priority)
+s2 <- step2_E5(s1, data, threshold, priority)
 s3 <- stepN_E5(s2, data, threshold, priority)
 s4 <- stepN_E5(s3, data, threshold, priority)
+stepN_E5(s4, data, threshold, priority)
 
 
 stepPrev <- s2
@@ -318,3 +319,81 @@ testlist[[1]] <- NULL
 testlist[[2]] <- NULL
 
 miive('f1=~x1+x3+x6+x7+x8\nf2=~x5+x4+x2', data, var.cov = T)
+EFAmiive5( HolzingerSwineford1939[,7:15], threshold, priority)
+data <-  HolzingerSwineford1939[,7:15]
+
+
+##6/23
+#m2: 2 factor model
+sm2 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4
+        f2=~ 1*x5 + .7*x6 + .6*x7 + .6*x8
+      f1 ~~ .5*f2'
+sim2 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim2[[p]] <- simulateData(sm2, sample.nobs = 1000)
+}
+
+#model fit
+sim2out <-  EFAmiive5(sim2[[1]], threshold = .05,  priority = 'sargan+factorloading_R2')
+sim2out
+#m3: 2 factor model w/ x7 crossload on f1
+sm3 <- 'f1 =~ 1*x1 + .8 * x2 + .7*x3 + .7*x4 + .5*x7
+        f2=~ 1*x5 + .7*x6 + .6*x7 + .6*x8
+        f1 ~~ .5*f2'
+sim3 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim3[[p]] <- simulateData(sm3, sample.nobs = 1000)
+}
+
+#model fit
+sim3out <-  EFAmiive5(sim3[[1]], threshold = .05,  priority = 'sargan+factorloading_R2')
+sim3out
+#m4: 1 factor w/ x4 ~~ x5, and x4 ~~ x2
+sm4 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4 + .65*x5 + .6*x6 + .6*x7 + .55*x8
+          x4 ~~ .5*x5
+          x4 ~~ .4*x2'
+sim4 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim4[[p]] <- simulateData(sm4, sample.nobs = 1000)
+}
+
+#model fit
+sim4out <-  EFAmiive5(sim4[[1]], threshold = .05,  priority = 'sargan+factorloading_R2')
+sim4out
+#sm17: 3 factor with crossloading, x7 and x4 crossload
+sm17 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4 +.5*x7
+f2 =~ 1*x5 + .8*x6+ .7*x7 + .7*x8
+f3 =~ 1*x9 + .8*x10 + .7*x11 + .x7*x12+.6*x4
+f1 ~~ .4*f2
+f1 ~~ .4*f3
+f2 ~~ .4*f3'
+sim17<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim17[[p]] <- simulateData(sm17, sample.nobs = 1000)
+}
+
+sim17out <- EFAmiive5(sim17[[1]], threshold = .05,  priority = 'sargan+factorloading_R2')
+sim17out
+#sm18: 4 factor
+sm18 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4 +.5*x7
+f2 =~ 1*x5 + .8*x6+ .7*x7 + .7*x8
+f3 =~ 1*x9 + .8*x10 + .7*x11 + .x7*x12+.6*x4
+f4 =~ 1*x13 + .8*x14 + .7*x15 + .7*x16 + .5*x10
+f1 ~~ .4*f2
+f1 ~~ .4*f3
+f2 ~~ .4*f3
+f1 ~~ .5*f4
+f2 ~~ .45*f4
+f3 ~~ .4*f4'
+sim18<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim18[[p]] <- simulateData(sm18, sample.nobs = 1000)
+}
+
+sim18out <- EFAmiive5(sim18[[1]], threshold = .05,  priority = 'sargan+factorloading_R2')
+sim18out
