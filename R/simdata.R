@@ -165,6 +165,91 @@ for (p in 1:30){
   sim17[[p]] <- simulateData(sm17, sample.nobs = 1000)
 }
 
+#sm18: 4 factor
+sm18 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4 +.5*x7
+f2 =~ 1*x5 + .8*x6+ .7*x7 + .7*x8
+f3 =~ 1*x9 + .8*x10 + .7*x11 + .x7*x12+.6*x4
+f4 =~ 1*x13 + .8*x14 + .7*x15 + .7*x16 + .5*x10
+f1 ~~ .4*f2
+f1 ~~ .4*f3
+f2 ~~ .4*f3
+f1 ~~ .5*f4
+f2 ~~ .45*f4
+f3 ~~ .4*f4'
+sim18<- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim18[[p]] <- simulateData(sm18, sample.nobs = 1000)
+}
+
+#sm19:
+#m19: 2 factor model, with x3 having correlated errors with x4 and x5, but not between x4 and x5.
+sm19 <- 'f1 =~ 1*x1 + .8 * x2 + .75*x3 + .7*x4 + .6*x5
+        f2=~ 1*x6 + .8*x7 + .75*x8 + .7*x9 + .6*x10
+      f1 ~~ .5*f2
+      x3 ~~ .4*x4
+      x3 ~~ .35*x5
+      '
+sim19 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim19[[p]] <- simulateData(sm19, sample.nobs = 1000)
+}
+
+#sm20
+#20: 2 factor model, with correlated errors
+sm20 <- 'f1 =~ 1*x1 + .8 * x2 + .75*x3 + .7*x4 + .6*x5
+        f2=~ 1*x6 + .8*x7 + .75*x8 + .7*x9 + .6*x10
+      f1 ~~ .5*f2
+      x2 ~~ .4*x4
+      x2 ~~ .35*x5
+      x4 ~~ .3*x5
+      '
+sim20 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim20[[p]] <- simulateData(sm20, sample.nobs = 1000)
+}
+
+#sm21
+#21: 3 factor model, with correlated errors
+sm21 <- 'f1 =~ 1*x1 + .8 * x2 + .75*x3 + .7*x4 + .6*x5
+        f2=~ 1*x6 + .8*x7 + .75*x8 + .7*x9 + .6*x10
+        f3=~ 1*x11 + .8*x12 + .7*x13 + .65*x14 + .6*x15
+      f1 ~~ .5*f2
+      x2 ~~ .4*x4
+      x2 ~~ .35*x5
+      x4 ~~ .3*x5
+      f1 ~~ .4*f3
+      f2 ~~ .35*f3
+      '
+sim21 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim21[[p]] <- simulateData(sm21, sample.nobs = 1000)
+}
+
+#sm22
+#22: 4 factor model, with correlated errors
+sm22 <- 'f1 =~ 1*x1 + .8 * x2 + .75*x3 + .7*x4 + .6*x5
+        f2=~ 1*x6 + .8*x7 + .75*x8 + .7*x9 + .6*x10
+        f3=~ 1*x11 + .8*x12 + .7*x13 + .65*x14 + .6*x15
+        f4=~ 1*x16+ .8*x17 + .7*x18+ .65*x19 + .6*x20
+      f1 ~~ .5*f2
+      x2 ~~ .4*x4
+      x2 ~~ .35*x5
+      x4 ~~ .3*x5
+      f1 ~~ .4*f3
+      f2 ~~ .35*f3
+      f4~~ .5*f1
+      f4~~.4*f2
+      f4~~.3*f3
+      '
+sim22 <- list()
+for (p in 1:30){
+  set.seed(123.4+p)
+  sim22[[p]] <- simulateData(sm22, sample.nobs = 1000)
+}
 ########small sample size sim#######
 #m1: one factor with x4 ~~ x5
 sm1 <- 'f1 =~ 1*x1 + .8*x2 + .7*x3 + .7*x4 + .65*x5 + .6*x6 + .6*x7 + .55*x8

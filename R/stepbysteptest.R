@@ -397,3 +397,15 @@ for (p in 1:30){
 
 sim18out <- EFAmiive5(sim18[[1]], threshold = .05,  priority = 'sargan+factorloading_R2')
 sim18out
+
+
+
+#########6.30########
+holzingerfit <- EFAmiive5(data, threshold, priority)
+s1 <- step1_E5(data, threshold, priority)
+s2 <- step2_E5(s1, data, threshold, priority)
+s3 <- stepN_E5(s2, data, threshold, priority)
+
+miive('f1=~x6+x4+x5+x2+x3+x7+x8+x9
+      f2=~x1+x2+x3+x7+x8+x9', data, var.cov = T)
+
