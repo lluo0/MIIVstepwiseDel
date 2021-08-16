@@ -42,8 +42,8 @@
 #if multiple variables have the same least sum of significnat sargans and non-significant factor loadings, chooses the one with higher R2.
 
 
-select_scalingind <- function(data, threshold = .05,
-                            priority = "order"){
+select_scalingind <- function(data, sigLevel = .05,
+                              priority = "order"){
 
   scalingindicator <- character()
 
@@ -74,7 +74,7 @@ select_scalingind <- function(data, threshold = .05,
       num_sigsargan[[p]] <- 0
       names(num_sigsargan)[p] <- names(fit)[p]
       for(i in 1:length(fit[[p]]$eqn)){
-        if(fit[[p]]$eqn[[i]]$sargan.p < threshold){
+        if(fit[[p]]$eqn[[i]]$sargan.p < sigLevel){
           num_sigsargan[[p]] <- num_sigsargan[[p]]+1
         }
       }
@@ -112,7 +112,7 @@ select_scalingind <- function(data, threshold = .05,
     scalingindicator <- sarganallmin[order(match(sarganallmin, R2_order))][1]
   }
   if(priority == 'sargan_factorloading'){
-   # mixedlist <- num_nonsigfactorloading[names(num_nonsigfactorloading)==sarganallmin]
+    # mixedlist <- num_nonsigfactorloading[names(num_nonsigfactorloading)==sarganallmin]
     mixedlist <- num_nonsigfactorloading[sarganallmin]
     mixedmin <- min(unlist(mixedlist))
     mixedallmin <- colnames(t(which(mixedlist==mixedmin)))
@@ -163,7 +163,7 @@ select_scalingind <- function(data, threshold = .05,
 #
 #
 # ##for step 2
-# select_scalingind_stepN <- function(data, threshold = .05,
+# select_scalingind_stepN <- function(data, sigLevel = .05,
 #                               priority = "order",prevStep){
 #
 #   scalingindicator <- character()
@@ -196,7 +196,7 @@ select_scalingind <- function(data, threshold = .05,
 #     sargan_sig_badvar[[p]] <- 0
 #     names(sargan_sig_badvar)[p] <- names(fit)[p]
 #     for(i in 1:length(fit[[p]]$eqn)){
-#       if(fit[[p]]$eqn[[i]]$sargan.p < threshold){
+#       if(fit[[p]]$eqn[[i]]$sargan.p < sigLevel){
 #         sargan_sig_badvar[[p]] <- sargan_sig_badvar[[p]]+1
 #       }
 #     }
@@ -274,8 +274,8 @@ select_scalingind <- function(data, threshold = .05,
 #   return(scalingindicator)
 # }
 
-select_scalingind_stepN <- function(data, threshold = .05,
-                              priority = "order", stepPrev){
+select_scalingind_stepN <- function(data, sigLevel = .05,
+                                    priority = "order", stepPrev){
 
   scalingindicator <- character()
 
@@ -317,7 +317,7 @@ select_scalingind_stepN <- function(data, threshold = .05,
       num_sigsargan[[p]] <- 0
       names(num_sigsargan)[p] <- names(fit)[p]
       for(i in 1:length(fit[[p]]$eqn)){
-        if(fit[[p]]$eqn[[i]]$sargan.p < threshold){
+        if(fit[[p]]$eqn[[i]]$sargan.p < sigLevel){
           num_sigsargan[[p]] <- num_sigsargan[[p]]+1
         }
       }
@@ -405,7 +405,7 @@ select_scalingind_stepN <- function(data, threshold = .05,
 }
 
 ##for step N
-select_scalingind_stepN <- function(data, threshold = .05,
+select_scalingind_stepN <- function(data, sigLevel = .05,
                                     priority = "order", goodmodelpart, badvar, num_factor){
 
   #reorder badvar based on their order in the original data
@@ -439,7 +439,7 @@ select_scalingind_stepN <- function(data, threshold = .05,
     sargan_sig_badvar[[p]] <- 0
     names(sargan_sig_badvar)[p] <- names(fit)[p]
     for(i in 1:length(fit[[p]]$eqn)){
-      if(fit[[p]]$eqn[[i]]$sargan.p < threshold){
+      if(fit[[p]]$eqn[[i]]$sargan.p < sigLevel){
         sargan_sig_badvar[[p]] <- sargan_sig_badvar[[p]]+1
       }
     }
@@ -513,9 +513,9 @@ select_scalingind_stepN <- function(data, threshold = .05,
   # else{
   #   stop('ERROR: please specify a valid order of criteria.')
   # }
-if(is.null(scalingindicator)){
-  scalingindicator <- colnames(data[,badvar])[1]
-}
+  if(is.null(scalingindicator)){
+    scalingindicator <- colnames(data[,badvar])[1]
+  }
   return(scalingindicator)
 }
 

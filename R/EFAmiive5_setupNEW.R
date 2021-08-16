@@ -59,3 +59,14 @@ order_r2 <- function(object){
   }
   return(r2_list)
 }
+
+r2_order <- function(object){
+  ##check the r2 for each variable and use the highest r2 as the initial scaling indicator
+  r2 <- matrix(NA, nrow = 1, ncol = dim(object)[2])
+  colnames(r2) <- colnames(object)
+  for (i in 1:dim(object)[2]){
+    r2[,i] <- summary(lm(paste(colnames(object)[i], paste(colnames(object)[-i], collapse = "+"), sep = "~"), data = object))$r.squared
+  }
+  r2 <- as.matrix(t(r2[,order(r2[nrow(r2),],decreasing=TRUE)]))
+  return(r2)}
+
