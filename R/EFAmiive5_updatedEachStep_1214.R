@@ -1,5 +1,5 @@
-step1_E5 <- function(data, sigLevel, priority = 'order', correlatedErrors  = NULL){
-  scalingindicator <- select_scalingind(data, sigLevel, priority)
+step1_E5 <- function(data, sigLevel, scalingCrit = 'order', correlatedErrors  = NULL){
+  scalingindicator <- select_scalingind(data, sigLevel, scalingCrit)
   order_scalingind <- which(colnames(data)==scalingindicator)
   model <- paste0('f1=~', paste0(colnames(data)[order_scalingind]), '+',
                   paste0(colnames(data)[-order_scalingind], collapse = '+'))
@@ -59,7 +59,7 @@ step1_E5 <- function(data, sigLevel, priority = 'order', correlatedErrors  = NUL
   return(finalobj)
 }
 
-step2_E5 <- function(stepPrev, data, sigLevel, priority){
+step2_E5 <- function(stepPrev, data, sigLevel, scalingCrit){
 
   badvar <- stepPrev$badvar
   goodmodelpart <- stepPrev$goodmodelpart
@@ -67,8 +67,8 @@ step2_E5 <- function(stepPrev, data, sigLevel, priority){
   num_factor <- stepPrev$num_factor
   correlatedErrors <- stepPrev$correlatedErrors
 
-  # scalingindicator <- select_scalingind_stepN(data, sigLevel, priority, goodmodelpart, badvar, num_factor)
-  scalingindicator <- select_scalingind_stepN(data, sigLevel, priority, stepPrev)
+  # scalingindicator <- select_scalingind_stepN(data, sigLevel, scalingCrit, goodmodelpart, badvar, num_factor)
+  scalingindicator <- select_scalingind_stepN(data, sigLevel, scalingCrit, stepPrev)
 
   order_scalingind <- which(badvar==scalingindicator)
 
@@ -128,7 +128,7 @@ step2_E5 <- function(stepPrev, data, sigLevel, priority){
 }
 
 
-stepN_E5 <- function(stepPrev, data, sigLevel, priority){
+stepN_E5 <- function(stepPrev, data, sigLevel, scalingCrit){
 
   correlatedErrors <- stepPrev$correlatedErrors
 
@@ -276,7 +276,7 @@ stepN_E5 <- function(stepPrev, data, sigLevel, priority){
     stepPrev$badvar <- newbadvar
     stepPrev$goodmodelpart <- newgoodmodelpart
 
-    scalingindicator <- select_scalingind_stepN(data, sigLevel, priority, stepPrev)
+    scalingindicator <- select_scalingind_stepN(data, sigLevel, scalingCrit, stepPrev)
     order_scalingind <- which(newbadvar==scalingindicator)
 
     model <- paste(paste0(newgoodmodelpart, collapse = '\n'),
@@ -375,7 +375,7 @@ stepN_E5 <- function(stepPrev, data, sigLevel, priority){
   #   stepPrev$badvar <- newbadvar <- setdiff(stepPrev$badvar, unique(unlist(newgoodvar_addon)))
   #   stepPrev$goodmodelpart <- newgoodmodelpart
   #
-  #   scalingindicator <- select_scalingind_stepN(data, sigLevel, priority, stepPrev)
+  #   scalingindicator <- select_scalingind_stepN(data, sigLevel, scalingCrit, stepPrev)
   #   order_scalingind <- which(newbadvar==scalingindicator)
   #
   #   model <- paste(paste0(newgoodmodelpart, collapse = '\n'),
@@ -500,7 +500,7 @@ stepN_E5 <- function(stepPrev, data, sigLevel, priority){
   #     # length_best <- length(badvar_list[[best_num]])
   #     # num_badvar <- length_best
   #     num_factor <- stepPrev$num_factor+1
-  #     scalingindicator <- select_scalingind_stepN(data, sigLevel, priority, newgoodmodelpart, newbadvar, num_factor)
+  #     scalingindicator <- select_scalingind_stepN(data, sigLevel, scalingCrit, newgoodmodelpart, newbadvar, num_factor)
   #
   #
   #     order_scalingind <- which(newbadvar==scalingindicator)
@@ -545,17 +545,17 @@ stepN_E5 <- function(stepPrev, data, sigLevel, priority){
 }
 
 
-EFAmiive5 <- function(data, sigLevel = .05, priority = 'order', correlatedErrors = NULL){
-  step1 <- step1_E5(data, sigLevel, priority, correlatedErrors)
+EFAmiive5 <- function(data, sigLevel = .05, scalingCrit = 'order', correlatedErrors = NULL){
+  step1 <- step1_E5(data, sigLevel, scalingCrit, correlatedErrors)
   # finalobj <- step1
   # if(!length(step1$badvar)==0){
-  #   step2 <- step2_E5(step1, data, sigLevel, priority)
+  #   step2 <- step2_E5(step1, data, sigLevel, scalingCrit)
   #   finalobj <- step2
   #   if(!length(step2$badvar)==0){
-  #     stepN <- stepN_E5(step2, data, sigLevel, priority)
+  #     stepN <- stepN_E5(step2, data, sigLevel, scalingCrit)
   #     finalobj <- stepN
   #     while(stepN$nextstep == 'yes'){
-  #       stepN <- stepN_E5(stepN, data, sigLevel, priority)
+  #       stepN <- stepN_E5(stepN, data, sigLevel, scalingCrit)
   #       finalobj <- stepN
   #     }
   #   }
@@ -564,15 +564,15 @@ EFAmiive5 <- function(data, sigLevel = .05, priority = 'order', correlatedErrors
     finalobj <- step1
   }
   if(step1$nextstep == 'yes'){
-    step2 <- step2_E5(step1, data, sigLevel, priority )
+    step2 <- step2_E5(step1, data, sigLevel, scalingCrit )
     if(step2$nextstep == 'no'){
       finalobj <- step2
     }
     if(step2$nextstep =='yes'){
-      stepN <- stepN_E5(step2, data, sigLevel, priority)
+      stepN <- stepN_E5(step2, data, sigLevel, scalingCrit)
       finalobj <- stepN
       while(stepN$nextstep =='yes'){
-        stepN <- stepN_E5(stepN, data, sigLevel, priority)
+        stepN <- stepN_E5(stepN, data, sigLevel, scalingCrit)
         finalobj <- stepN
       }
 
