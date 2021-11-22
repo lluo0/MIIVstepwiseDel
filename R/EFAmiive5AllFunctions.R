@@ -217,6 +217,7 @@ select_scalingind <- function(data, sigLevel = .05,
     mixedlist <- num_nonsigfactorloading[sarganallmin]
     mixedmin <- min(unlist(mixedlist))
     mixedallmin <- colnames(t(which(mixedlist==mixedmin)))
+    scalingindicator <- mixedallmin[order(match(mixedallmin, R2_order))][1]
 
   }
   if(scalingCrit == 'factorloading_R2'){
