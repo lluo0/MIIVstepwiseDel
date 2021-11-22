@@ -480,8 +480,12 @@ step2_E5 <- function(stepPrev, data, sigLevel, scalingCrit){
   # scalingindicator <- select_scalingind_stepN(data, sigLevel, scalingCrit, goodmodelpart, badvar, num_factor)
   scalingindicator <- select_scalingind_stepN(data, sigLevel, scalingCrit, stepPrev)
 
-  order_scalingind <- which(badvar==scalingindicator)
+  order_scalingind <- which(badvar %in% scalingindicator)
 
+  # Lan -> the below code didn't seem to be working. It produces model code where
+  # each indicator on f2 is on it's own line and ends with "+"
+  # These seems to work with other scaling indicator options so I didn't want to mess with it..
+  #(I'm tring "sargan_factorloading")
   model <- paste(paste0(goodmodelpart, collapse = '\n'),
                  paste(paste0("f",num_factor+1), "=~",paste0(badvar[order_scalingind]), '+',
                        paste0(badvar[-order_scalingind], collapse = "+"), sep = ""),
